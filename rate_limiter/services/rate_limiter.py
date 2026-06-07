@@ -1,12 +1,13 @@
-from services.token_bucket import TokenBucket
+from services.limiter_algorithms.token_bucket import TokenBucket
+from services.limiter_algorithms.fixed_window_counter import FixedWindowCounter
 
 class RateLimiter:
-    def __init__(self, capacity, refill_rate):
+    def __init__(self, algorithm):
         self.users = {}
-        self.capacity = capacity
-        self.refill_rate = refill_rate
+        self.algorithm = algorithm
     
     def allow_request(self, user_id) -> bool:
         if user_id not in self.users:
-            self.users[user_id] = TokenBucket(self.capacity, self.refill_rate)
+            self.users[user_id] = self.algorithm()
         return self.users[user_id].allow_request()
+        
