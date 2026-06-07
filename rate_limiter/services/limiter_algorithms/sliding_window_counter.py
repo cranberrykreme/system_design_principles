@@ -29,7 +29,15 @@ class SlidingWindowCounter:
     
     def _refill(self):
         now = datetime.now().replace(second=0, microsecond=0)
-        if now != self.curr_window_start:
-            self.curr_window_start = now
+        windows_elapsed = (now - self.curr_window_start).total_seconds() // self.WINDOW_SIZE
+
+        if windows_elapsed == 0:
+            return
+        elif windows_elapsed == 1:
             self.prev_window_tokens_used = self.curr_window_tokens_used
-            self.curr_window_tokens_used = 0
+        else:
+            self.prev_window_tokens_used = 0
+        
+        self.curr_window_start = now
+        self.curr_window_tokens_used = 0
+        
