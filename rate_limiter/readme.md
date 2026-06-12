@@ -16,3 +16,29 @@
 
 - **Sliding Window Log**:
   - We record all the requests we accept within the last window of time t. When receiving a new request, remove any old requests we accepted that have since fallen out of that time window. Accept the request if we are now below our capacity n, if accepting, add the current timestamp to the end of the queue.
+
+## How to run:
+
+### On Local machine:
+
+1. activate venv ->
+
+```bash
+python -m venv .venv
+pip install -r requirements.txt
+source .venv/bin/activate
+```
+
+2. run API ->
+
+```bash
+fastapi dev api/rate_limit_controller.py
+```
+
+### Using Docker:
+
+1. docker compose ->
+
+```bash
+docker compose up --build
+```
