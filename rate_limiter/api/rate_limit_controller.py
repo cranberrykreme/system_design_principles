@@ -1,15 +1,13 @@
-from fastapi import FastAPI, Depends
-from services.rate_limiter import RateLimiter
-from services.limiter_algorithms.token_bucket import TokenBucket
+from fastapi import APIRouter, Depends
+from api.deps import get_rate_limiter
 
-app = FastAPI()
-rate_limiter = RateLimiter(lambda: TokenBucket(capacity=5, refill_rate=0.2))
+router = APIRouter()
 
-def get_rate_limiter() -> RateLimiter:
-    return rate_limiter
+@router.get('/make-request')
+async def make_request(user_id: str, limiter = Depends(get_rate_limiter)):
+    allowed = await limiter.allow_request(user_id)
 
-@app.get('/make-request')
-async def make_request(rate_limiter: RateLimiter = Depends(get_rate_limiter)) -> bool:
-    response = rate_limiter.allow_request("chris")
-
-    return response
+    return {
+        "user_id": user_id,
+        "allowed": allowed
+    }

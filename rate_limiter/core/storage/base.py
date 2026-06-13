@@ -1,0 +1,16 @@
+from abc import ABC, abstractmethod
+
+
+class RateLimitStorage(ABC):
+
+    @abstractmethod
+    async def get(self, key: str):
+        pass
+
+    @abstractmethod
+    async def set(self, key: str, value, ttl: int):
+        pass
+
+    @abstractmethod
+    async def incr(self, key: str):
+        pass
