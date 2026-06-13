@@ -1,6 +1,5 @@
 from core.limiter_algorithms.base import RateLimitStrategy
 
-
 class RateLimiter:
 
     def __init__(self, strategy: RateLimitStrategy):

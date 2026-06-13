@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 
 from infra.redis_client import create_redis
 from core.storage.redis import RedisStorage
-from core.limiter_algorithms.token_bucket import TokenBucket
+from core.limiter_algorithms.sliding_window_counter import SlidingWindowCounter
 from core.rate_limiter import RateLimiter
 from api.rate_limit_controller import router
 
@@ -17,7 +17,7 @@ async def lifespan(app: FastAPI):
 
     storage = RedisStorage(redis)
 
-    strategy = TokenBucket(
+    strategy = SlidingWindowCounter(
         storage=storage,
         capacity=5,
         refill_rate=0.2

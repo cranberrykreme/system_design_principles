@@ -9,7 +9,7 @@ class RedisStorage(RateLimitStorage):
         self.redis = redis
 
     async def get(self, key: str):
-        value = await self.redis.get(key)   # ✅ await FIRST
+        value = await self.redis.get(key)
 
         if value is None:
             return None
@@ -17,7 +17,7 @@ class RedisStorage(RateLimitStorage):
         if isinstance(value, bytes):
             value = value.decode("utf-8")
 
-        return json.loads(value)            # ✅ THEN parse JSON
+        return json.loads(value)
 
     async def set(self, key: str, value, ttl: int):
         await self.redis.set(

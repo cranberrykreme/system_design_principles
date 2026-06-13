@@ -1,6 +1,7 @@
 import time
 from core.storage.base import RateLimitStorage
 from core.limiter_algorithms.base import RateLimitStrategy
+from rate_limiter.core.utils.get_storage_key import get_key
 
 
 class TokenBucket(RateLimitStrategy):
@@ -11,7 +12,7 @@ class TokenBucket(RateLimitStrategy):
         self.refill_rate = refill_rate  # tokens per second
 
     async def allow_request(self, key: str) -> bool:
-        bucket_key = self._key(key)
+        bucket_key = get_key(key)
 
         bucket = await self._load(bucket_key)
 
@@ -45,9 +46,6 @@ class TokenBucket(RateLimitStrategy):
 
         bucket["tokens"] -= 1
         return True
-
-    def _key(self, key: str) -> str:
-        return f"bucket:{key}"
 
     async def _load(self, key: str) -> dict:
         data = await self.storage.get(key)
